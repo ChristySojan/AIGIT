@@ -157,8 +157,8 @@ def get_git_command(natural_text):
             if parts:
                 git_command = parts[0]["text"].strip()
 
-                # 🔹 Fix: Remove unwanted formatting (```bash ... ```)
-                git_command = git_command.replace("```bash", "").replace("```", "").strip()
+                # 🔹 Fix: Remove unwanted formatting (backticks and Markdown)
+                git_command = git_command.replace("```bash", "").replace("```", "").replace("`", "").strip()
 
                 print(f"🛠️ Suggested Git Command: {git_command}")  # Debugging
                 return git_command
