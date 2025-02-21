@@ -142,7 +142,7 @@ GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini
 HEADERS = {"Content-Type": "application/json"}
 
 def get_git_command(natural_text):
-    """Converts natural language input to a Git command using Gemini API."""
+    """Converts natural language input to a Git command using Gemini API and cleans the output."""
     payload = {
         "contents": [{"parts": [{"text": f"Convert this to a Git command only, no explanation: {natural_text}"}]}]
     }
@@ -154,9 +154,12 @@ def get_git_command(natural_text):
             data = response.json()
             parts = data.get("candidates", [{}])[0].get("content", {}).get("parts", [])
 
-            # Extract the first valid Git command
             if parts:
                 git_command = parts[0]["text"].strip()
+
+                # 🔹 Fix: Remove unwanted formatting (```bash ... ```)
+                git_command = git_command.replace("```bash", "").replace("```", "").strip()
+
                 print(f"🛠️ Suggested Git Command: {git_command}")  # Debugging
                 return git_command
         else:
