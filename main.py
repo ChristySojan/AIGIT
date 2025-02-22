@@ -1,7 +1,6 @@
 import os
 import subprocess
 import requests
-import shlex
 
 # Set API Key securely (DO NOT HARDCODE API KEYS)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCmHRnLQGQffYDsIILLclyXawwHC33h96k")  # Store securely
