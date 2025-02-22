@@ -26,6 +26,9 @@ def get_git_command(natural_text):
                 # 🔹 Fix: Remove unwanted formatting (backticks and Markdown)
                 git_command = git_command.replace("```bash", "").replace("```", "").replace("`", "").strip()
 
+                # 🔹 Fix: Replace semicolons with '&&' for proper command chaining
+                git_command = git_command.replace(";", " && ")
+
                 print(f"🛠️ Suggested Git Command: {git_command}")  # Debugging
                 return git_command
         else:
@@ -41,7 +44,7 @@ def validate_git_command(command):
     command = command.strip().lower()  # Normalize the command
 
     # Ensure it's a Git command
-    if not command.startswith("git "):  
+    if not command.startswith("git "):
         return False
 
     # Check against banned commands
@@ -70,5 +73,3 @@ if git_command:
     execute_git_command(git_command)
 else:
     print("⚠️ Failed to generate a valid Git command.")
-
- 
