@@ -1,0 +1,32 @@
+AIGIT SOFTWARE LICENSE AGREEMENT
+Last Updated: 23-02-2025
+
+This Software License Agreement ("Agreement") is a legal agreement between you ("User") and Christy Sojan and Ashlesh Hegde ("Licensor") for the use of the AIGIT software ("Software"). By downloading, installing, or using the Software, you agree to be bound by the terms of this Agreement.
+
+1. LICENSE GRANT
+Licensor grants User a non-exclusive, non-transferable, and revocable license to install and use the Software for personal or business use only.
+
+2. RESTRICTIONS
+User may not:
+
+Modify, decompile, reverse-engineer, or create derivative works of the Software. Distribute, sublicense, rent, lease, or sell the Software. Remove or alter any copyright, trademark, or proprietary notices.
+
+3. OWNERSHIP
+The Software is licensed, not sold. Licensor retains all rights, title, and interest in the Software, including all copyrights, trademarks, and intellectual property.
+
+4. DISCLAIMER OF WARRANTIES
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. LICENSOR DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+5. LIMITATION OF LIABILITY
+IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, OR BUSINESS INTERRUPTION ARISING FROM THE USE OR INABILITY TO USE THE SOFTWARE.
+
+6. TERMINATION
+This license is effective until terminated. Licensor may terminate this Agreement if User violates any terms. Upon termination, User must delete all copies of the Software.
+
+7. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with the laws of India.
+
+8. CONTACT INFORMATION
+For any questions about this Agreement, contact: aigit2025@gmail.com
+
+© 2025 AIGIT. All rights reserved.
