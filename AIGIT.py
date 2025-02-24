@@ -52,14 +52,14 @@ def validate_git_command(command):
 def execute_git_command(command):
     """Executes the Git command safely if it is valid, with user confirmation."""
     if command and validate_git_command(command):
-        # confirmation = input("⚠️ Are you sure you want to execute this command? (yes/no): ")
-        # if confirmation.lower() == "yes":
+        confirmation = input("⚠️ Are you sure you want to execute this command? (yes/no): ")
+        if confirmation.lower() == "yes":
             print(f"\n▶️ Executing: {command}\n")
             subprocess.run(command, shell=True, check=True)
             print("\n✅ Command executed successfully!\n")
-        # else:
+        else:
             print("\n❌ Execution cancelled.\n")
-
+    else:
         print("\n⚠️ Invalid or unsafe Git command.\n")
 
 # 🔥 MAIN EXECUTION 🔥
