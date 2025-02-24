@@ -59,7 +59,7 @@ def execute_git_command(command):
             print("\n✅ Command executed successfully!\n")
         else:
             print("\n❌ Execution cancelled.\n")
-
+    else:
         print("\n⚠️ Invalid or unsafe Git command.\n")
 
 # 🔥 MAIN EXECUTION 🔥
