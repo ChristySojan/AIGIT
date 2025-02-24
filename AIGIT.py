@@ -25,13 +25,13 @@ def get_git_command(natural_text):
                 git_command = parts[0]["text"].strip()
                 git_command = git_command.replace("```bash", "").replace("```", "").replace("`", "").strip()
                 git_command = git_command.replace(";", " && ")
-                print(f"\n🔹 Suggested Git Command:\n   {git_command}\n")
+                print(f"🛠️ Suggested Git Command: {git_command}")  # Debugging
                 return git_command
         else:
-            print(f"\n❌ API Error: {response.status_code} - {response.text}\n")
+            print(f"❌ API Error: {response.status_code} - {response.text}")
 
     except requests.exceptions.RequestException as e:
-        print(f"\n⚠️ Request Failed: {e}\n")
+        print(f"⚠️ Request Failed: {e}")
 
     return None
 
@@ -44,26 +44,23 @@ def validate_git_command(command):
     BANNED_COMMANDS = ["rm -rf .git", "sudo", "shutdown"]
     for banned in BANNED_COMMANDS:
         if banned in command:
-            print(f"\n🚨 Unsafe command detected: {command}\n")
+            print(f"❌ Unsafe command detected: {command}")
             return False
 
     return True  
 
 def execute_git_command(command):
-    """Executes the Git command safely if it is valid, with user confirmation."""
+    """Executes the Git command safely if it is valid."""
     if command and validate_git_command(command):
-        confirmation = input("⚠️ Are you sure you want to execute this command? (yes/no): ")
-        if confirmation.lower() == "yes":
-            print(f"\n▶️ Executing: {command}\n")
-            subprocess.run(command, shell=True, check=True)
-            print("\n✅ Command executed successfully!\n")
-        else:
-            print("\n❌ Execution cancelled.\n")
+        print(f"🖥️ Executing: {command}")
+        subprocess.run(command, shell=True, check=True)
+        print(f"✅ Successfully Executed: {command}")
     else:
-        print("\n⚠️ Invalid or unsafe Git command.\n")
+        print("❌ Invalid or unsafe Git command.")
 
 # 🔥 MAIN EXECUTION 🔥
 if __name__ == "__main__":
+    # 🛠️ Read arguments from command line (excluding script name)
     if len(sys.argv) > 1:
         user_input = " ".join(sys.argv[1:])  # Convert all command-line arguments into a single string
         git_command = get_git_command(user_input)
@@ -71,6 +68,6 @@ if __name__ == "__main__":
         if git_command:
             execute_git_command(git_command)
         else:
-            print("\n⚠️ Failed to generate a valid Git command.\n")
+            print("⚠️ Failed to generate a valid Git command.")
     else:
-        print("\n⚠️ Usage: aigit <natural language command>\n")
+        print("⚠️ Usage: aigit <natural language command>")
