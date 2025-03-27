@@ -6,7 +6,7 @@ import shutil
 import json
 import tempfile
 from pathlib import Path
-# fushdfh
+#kasjdbb
 # Set API Key securely (DO NOT HARDCODE API KEYS)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCmHRnLQGQffYDsIILLclyXawwHC33h96k")  
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
@@ -124,3 +124,6 @@ if __name__ == "__main__":
             print("\n⚠️ Failed to generate a valid Git command.\n")
     else:
         print("\n⚠️ Usage: aigit <natural language command>\n")
+
+
+
