@@ -149,7 +149,7 @@ def handle_readme_creation_or_update(user_input):
     """Checks if the user input implies creating or updating a README file and processes it."""
     keywords = ["make", "create", "update"]
     if any(keyword in user_input.lower() for keyword in keywords):
-        print("\n🔹 Detected intent to create or update a README file.\n")
+        # print("\n🔹 Detected intent to create or update a README file.\n")
         confirmation = input("⚠️ Are you sure you want to create or update the README.md file? (yes(y)/no(n)): ")
         if confirmation.lower() not in ["y", "yes"]:
             print("\n❌ Operation cancelled.\n")
@@ -170,8 +170,8 @@ def handle_readme_creation_or_update(user_input):
         except Exception as e:
             print(f"\n❌ Failed to create/update README.md: {e}\n")
         return True
-    else:
-        print("\n⚠️ No intent detected to create or update a README file.\n")
+    # else:
+    #     print("\n⚠️ No intent detected to create or update a README file.\n")
     return False
 
 # 🔥 MAIN EXECUTION 🔥
