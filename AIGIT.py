@@ -115,12 +115,16 @@ def stage_files():
 def check_and_generate_readme():
     """Checks if README.md exists in the repository. If not, creates and generates its content."""
     readme_path = Path("README.md")
-    if (readme_path.exists()):
+    if readme_path.exists():
         print("\n✅ README.md already exists in the repository.\n")
         return
 
     print("\n🔹 README.md not found. Generating a new README.md...\n")
     repo_summary = analyze_repo()
+    if not repo_summary.strip():
+        print("\n⚠️ Failed to generate repository summary. Using a default template.\n")
+        repo_summary = "# Repository Summary\n\nThis repository contains source code files."
+
     try:
         with open(readme_path, "w", encoding="utf-8") as readme_file:
             readme_file.write(repo_summary)
