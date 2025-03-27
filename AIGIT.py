@@ -6,7 +6,7 @@ import shutil
 import json
 import tempfile
 from pathlib import Path
-#kasjdbbuygywgedwyb
+
 # Set API Key securely (DO NOT HARDCODE API KEYS)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCmHRnLQGQffYDsIILLclyXawwHC33h96k")  
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
@@ -112,12 +112,78 @@ def stage_files():
             subprocess.run(["git", "add", file], check=True)
     print("\n✅ Files staged successfully!\n")
 
+def create_file(filename, content=""):
+    """Creates a new file with optional content."""
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(content)
+    print(f"✅ File '{filename}' created successfully!")
+
+def analyze_repo():
+    """Analyzes the repository and generates a summary for the README.md."""
+    try:
+        # Get the list of files in the repository
+        repo_files = subprocess.run(["git", "ls-files"], capture_output=True, text=True, check=True).stdout.strip()
+        if not repo_files:
+            return "# Repository Summary\n\nNo files found in the repository."
+
+        # Generate a summary using AI
+        payload = {
+            "contents": [{"parts": [{"text": f"Analyze and summarize the following repository structure:\n{repo_files}"}]}]
+        }
+        response = requests.post(f"{GEMINI_API_URL}?key={GEMINI_API_KEY}", json=payload, headers=HEADERS, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            parts = data.get("candidates", [{}])[0].get("content", {}).get("parts", [])
+            if parts:
+                return parts[0]["text"].strip()
+        else:
+            print(f"\n❌ API Error while analyzing repo: {response.status_code} - {response.text}\n")
+    except requests.exceptions.RequestException as e:
+        print(f"\n⚠️ Request Failed: {e}\n")
+    except subprocess.CalledProcessError:
+        print("\n⚠️ Failed to retrieve repository files.\n")
+
+    return "# Repository Summary\n\nUnable to generate a summary for the repository."
+
+def handle_readme_creation_or_update(user_input):
+    """Checks if the user input implies creating or updating a README file and processes it."""
+    keywords = ["make", "create", "update"]
+    if any(keyword in user_input.lower() for keyword in keywords):
+        print("\n🔹 Detected intent to create or update a README file.\n")
+        confirmation = input("⚠️ Are you sure you want to create or update the README.md file? (yes(y)/no(n)): ")
+        if confirmation.lower() not in ["y", "yes"]:
+            print("\n❌ Operation cancelled.\n")
+            return False
+
+        repo_summary = analyze_repo()
+        if not repo_summary or not repo_summary.strip():
+            print("\n⚠️ Failed to generate repository summary. Using a default template.\n")
+            repo_summary = "# Repository Summary\n\nThis repository contains source code files."
+
+        try:
+            # Overwrite the README.md file with the new summary
+            with open("README.md", "w", encoding="utf-8") as readme_file:
+                readme_file.write(repo_summary)
+            print("\n✅ README.md created/updated successfully with repository summary!\n")
+        except PermissionError:
+            print("\n❌ Permission denied: Unable to write to README.md. Check file permissions.\n")
+        except Exception as e:
+            print(f"\n❌ Failed to create/update README.md: {e}\n")
+        return True
+    else:
+        print("\n⚠️ No intent detected to create or update a README file.\n")
+    return False
+
 # 🔥 MAIN EXECUTION 🔥
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         user_input = " ".join(sys.argv[1:])  # Convert all command-line arguments into a single string
-        git_command = get_git_command(user_input)
 
+        # Handle README creation or update if intent is detected
+        if handle_readme_creation_or_update(user_input):
+            sys.exit(0)  # Exit after creating or updating the README file
+
+        git_command = get_git_command(user_input)
         if git_command:
             execute_git_command(git_command)
         else:
