@@ -2,11 +2,11 @@
 
 
 a = Analysis(
-    ['AIGIT.py'],
+    ['aigit.py'],
     pathex=[],
     binaries=[],
     datas=[],
-    hiddenimports=['requests', 'os', 'sys', 'subprocess'],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='AIGIT',
+    name='aigit',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -35,5 +35,4 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['D:\\logo\\3.1.ico'],
 )

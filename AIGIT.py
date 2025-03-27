@@ -2,7 +2,11 @@ import os
 import sys
 import subprocess
 import requests
-
+import shutil
+import json
+import tempfile
+from pathlib import Path
+# fushdfh
 # Set API Key securely (DO NOT HARDCODE API KEYS)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCmHRnLQGQffYDsIILLclyXawwHC33h96k")  
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
@@ -61,6 +65,52 @@ def execute_git_command(command):
             print("\n❌ Execution cancelled.\n")
     else:
         print("\n⚠️ Invalid or unsafe Git command.\n")
+
+def get_git_status():
+    """Fetches the current Git status."""
+    try:
+        result = subprocess.run(["git", "status", "--short"], capture_output=True, text=True, check=True)
+        return result.stdout.strip()
+    except subprocess.CalledProcessError:
+        return "Error retrieving Git status."
+
+def generate_commit_message():
+    """Generates a commit message using AI based on changed files."""
+    status = get_git_status()
+    if not status:
+        return "No changes detected."
+    payload = {
+        "contents": [{"parts": [{"text": f"Generate a concise Git commit message for these changes:\n{status}"}]}]
+    }
+    try:
+        response = requests.post(f"{GEMINI_API_URL}?key={GEMINI_API_KEY}", json=payload, headers=HEADERS, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            parts = data.get("candidates", [{}])[0].get("content", {}).get("parts", [])
+            if parts:
+                return parts[0]["text"].strip()
+    except requests.exceptions.RequestException as e:
+        print(f"⚠️ Request Failed: {e}")
+    return "Commit updates."
+
+def stage_files():
+    """Displays and stages selected files."""
+    status = get_git_status()
+    if not status:
+        print("No changes to stage.")
+        return
+    print("\n🔹 Modified files:")
+    files = [line.split()[-1] for line in status.split("\n")]
+    for idx, file in enumerate(files, 1):
+        print(f"[{idx}] {file}")
+    choices = input("Enter file numbers to stage (comma-separated), or 'all' to stage everything: ")
+    if choices.lower() == "all":
+        subprocess.run(["git", "add", "."], check=True)
+    else:
+        selected_files = [files[int(i)-1] for i in choices.split(",") if i.isdigit() and 1 <= int(i) <= len(files)]
+        for file in selected_files:
+            subprocess.run(["git", "add", file], check=True)
+    print("\n✅ Files staged successfully!\n")
 
 # 🔥 MAIN EXECUTION 🔥
 if __name__ == "__main__":
