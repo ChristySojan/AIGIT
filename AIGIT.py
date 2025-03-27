@@ -6,7 +6,7 @@ import shutil
 import json
 import tempfile
 from pathlib import Path
-
+#kasjdbbuygywgedwyb
 # Set API Key securely (DO NOT HARDCODE API KEYS)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCmHRnLQGQffYDsIILLclyXawwHC33h96k")  
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
@@ -112,53 +112,6 @@ def stage_files():
             subprocess.run(["git", "add", file], check=True)
     print("\n✅ Files staged successfully!\n")
 
-def check_and_generate_readme():
-    """Checks if README.md exists in the repository. If not, creates and generates its content."""
-    readme_path = Path("README.md")
-    if readme_path.exists():
-        print("\n✅ README.md already exists in the repository.\n")
-        return
-
-    print("\n🔹 README.md not found. Generating a new README.md...\n")
-    repo_summary = analyze_repo()
-    if not repo_summary.strip():
-        print("\n⚠️ Failed to generate repository summary. Using a default template.\n")
-        repo_summary = "# Repository Summary\n\nThis repository contains source code files."
-
-    try:
-        with open(readme_path, "w", encoding="utf-8") as readme_file:
-            readme_file.write(repo_summary)
-        print("\n✅ README.md created successfully!\n")
-    except Exception as e:
-        print(f"\n❌ Failed to create README.md: {e}\n")
-
-def analyze_repo():
-    """Analyzes the repository and generates a summary for the README.md."""
-    try:
-        # Get the list of files in the repository
-        repo_files = subprocess.run(["git", "ls-files"], capture_output=True, text=True, check=True).stdout.strip()
-        if not repo_files:
-            return "# Repository Summary\n\nNo files found in the repository."
-
-        # Generate a summary using AI
-        payload = {
-            "contents": [{"parts": [{"text": f"Analyze and summarize the following repository structure:\n{repo_files}"}]}]
-        }
-        response = requests.post(f"{GEMINI_API_URL}?key={GEMINI_API_KEY}", json=payload, headers=HEADERS, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            parts = data.get("candidates", [{}])[0].get("content", {}).get("parts", [])
-            if parts:
-                return parts[0]["text"].strip()
-        else:
-            print(f"\n❌ API Error while analyzing repo: {response.status_code} - {response.text}\n")
-    except requests.exceptions.RequestException as e:
-        print(f"\n⚠️ Request Failed: {e}\n")
-    except subprocess.CalledProcessError:
-        print("\n⚠️ Failed to retrieve repository files.\n")
-
-    return "# Repository Summary\n\nUnable to generate a summary for the repository."
-
 # 🔥 MAIN EXECUTION 🔥
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -170,5 +123,4 @@ if __name__ == "__main__":
         else:
             print("\n⚠️ Failed to generate a valid Git command.\n")
     else:
-        check_and_generate_readme()  # Check and generate README.md if no arguments are provided
         print("\n⚠️ Usage: aigit <natural language command>\n")
