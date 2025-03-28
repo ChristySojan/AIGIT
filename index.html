@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Repository Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gitgraph.js/1.15.0/gitgraph.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        canvas { border: 1px solid black; }
+    </style>
+</head>
+<body>
+    <h2>Git Repository Visualization</h2>
+    <canvas id="gitGraph"></canvas>
+
+    <script>
+        async function loadGitData() {
+            const response = await fetch("git_log.json");
+            const commits = await response.json();
+
+            const gitgraph = new GitGraph({
+                template: "metro",
+                orientation: "vertical-reverse",  // <-- Makes the graph vertical
+                elementId: "gitGraph"
+            });
+
+            const branchPositions = {};
+            const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF", "#33FFD7"];
+            let colorIndex = 0;
+
+            const branches = {};
+            commits.forEach(commit => {
+                let branchName = commit.branch || "main";
+
+                if (!(branchName in branchPositions)) {
+                    branchPositions[branchName] = colors[colorIndex % colors.length];
+                    colorIndex++;
+                }
+
+                if (!branches[branchName]) {
+                    branches[branchName] = gitgraph.branch({
+                        name: branchName,
+                        color: branchPositions[branchName]
+                    });
+                }
+
+                branches[branchName].commit({
+                    message: commit.message,  // Display only commit message
+                    author: branchName,       // Show branch name below commit
+                });
+            });
+        }
+
+        loadGitData();
+    </script>
+</body>
+</html>
